@@ -111,6 +111,3 @@ main = do
     let om = osztasiMaradek 15 8
     putStr "osztasi maradek: "
     print om
-
-
--- HF 2. labor I
