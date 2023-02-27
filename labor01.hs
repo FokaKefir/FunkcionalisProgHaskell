@@ -1,4 +1,6 @@
-import Text.XHtml (base, abbr, caption)
+import Data.List
+import Data.Char
+
 fakt1 :: Integer -> Integer
 fakt1 0 = 1
 fakt1 n = n * fakt1 (n-1)
@@ -91,6 +93,79 @@ hatvany2 x n = auxhatvany 1 x n
         auxhatvany res x n
             | n == 0 = res
             | otherwise = auxhatvany (res * x) x (n - 1)
+
+
+-- halmazok
+fgv1 :: (Floating a, Enum a) => a -> [a]
+fgv1 n = map sqrt [1..n]
+
+fgv1_ :: (Floating a, Enum a) => a -> [(a, a)]
+fgv1_ n = map mysqrt [1..n]
+    where
+        mysqrt i = (i, sqrt i)
+
+fgv2 :: Integral a => a -> [a]
+fgv2 n = map (\x -> x * x) [1..n]
+
+fgv2_ :: Integral a => a -> [(a, a)]
+fgv2_ n = map (\x -> (x, x * x)) [1..n]
+
+fgv3 :: Integral a => a -> [a]
+fgv3 n = map myCube [1..n]
+    where
+        myCube i = i * i * i
+
+fgv4 :: Integral a => a -> [a]
+fgv4 n = [1..n] \\ (fgv2 n)
+
+fgv4_ :: Integral a => a -> [a]
+fgv4_ n = filter myTest [1..n]
+    where
+        myTest i = t2 * t2 /= i
+            where
+                t1 = sqrt (fromIntegral i)
+                t2 = round t1
+
+fgv5 :: Integral a => a -> a -> [a]
+fgv5 x n = map (^ x) [1..n]
+--fgv5 x n = map (x ^) [1..n]
+
+fgv6 :: Integral a => a -> [a]
+fgv6 n = filter (myTestDiv n) [2,4..div n 2]
+    where 
+        myTestDiv :: Integral a => a -> a -> Bool
+        myTestDiv n i = mod n i == 0
+
+fgv7 :: Integral a => a -> [a]
+fgv7 n = 2 : filter (myTestPrime 3) [3, 5..n]
+    where
+        myTestPrime i x
+            | i * i  > x = True
+            | x `mod` i == 0 = False
+            | otherwise = myTestPrime (i + 2) x
+
+primes = filterPrime [3, 5..] 
+    where filterPrime (p : xs) = p : filterPrime [x | x <- xs, x `mod` p /= 0]
+
+primesL n = 2 : takeWhile (<= n) primes 
+
+fgv8 :: Integral a => a -> [a]
+fgv8 n = filter (myTestComp 2) [2..n]
+    where
+        myTestComp i x
+            | i * i > x = False
+            | mod x i == 0 = True
+            | otherwise = myTestComp (i + 1) x
+
+fgv8_ :: Integral a => a -> [a]
+fgv8_ n = [2..n] \\ (fgv7 n)
+
+fgv9 :: Integral a => a -> [(a, a, a)]
+fgv9 n = [(x, y, z) | x <- [1..n], y <- [1..n], z <- [1..n], x ^ 2 + y ^ 2 == z ^ 2]
+
+fgv10 :: [(Char, Int)]
+fgv10 = [(x, ord x - ord 'a') | x <- ['a'..'z']]
+
 
 
 
