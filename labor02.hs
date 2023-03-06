@@ -51,3 +51,35 @@ fib2 n = auxfib n 0 1
         auxfib n a b
             | n == 1 = b
             | otherwise = auxfib (n - 1) b (a + b)
+
+
+-- II. resz
+fibList :: Integral t => t -> [t]
+fibList 0 = [0]
+fibList 1 = [0, 1]
+fibList n = xs ++ [k]
+    where
+        xs = fibList (n - 1)
+        k = last xs + last (init xs)
+
+fibList2 :: Integral t => t -> [t]
+fibList2 n = 0 : auxFibList n 0 1 
+    where
+        auxFibList 0 a b = []
+        auxFibList n a b = b : auxFibList (n - 1) b (a + b)
+
+fibgo n (a, b)
+    | n == 0 = a
+    | otherwise = fibgo (n - 1) (b, a + b)
+
+fibListInf = 0 : 1 : auxFibList fibListInf
+    where
+        auxFibList (a : (b : ve)) = (a + b) : auxFibList (b : ve)
+
+fibList3 n = take n fibListInf
+
+fibList4 n = takeWhile (<n) fibListInf
+
+
+
+
