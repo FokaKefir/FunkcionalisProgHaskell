@@ -1,13 +1,46 @@
-lista5 :: Integral t => t -> [Int]
-lista5 n = [aux x | x <- [0..n]]
+
+lista1 :: Integral t => Int -> [t]
+lista1 n = take n [x * x | x <- [0, 2..]] 
+
+lista1_ :: Integral t => Int -> [(t, t)]
+lista1_ n = take n [(x, x * x) | x <- [0, 2..]]
+
+-- print fuggveny rendre a lista ertekeit kiirja a mapM_ miatt
+printLista1 :: Int -> IO ()
+printLista1 n = mapM_ print $ take n [(x, x * x) | x <- [0, 2..]]
+
+printLista1_ :: Int -> IO ()
+printLista1_ n = mapM_ myPrint $ take n [(x, x * x) | x <- [0, 2..]] 
+    where
+        myPrint (t1, t2) = putStrLn $ show t1 ++ "^2 = " ++ show t2
+
+lista2 :: Integral t => Int -> [t]
+lista2 n = take n $ aux 1
+    where
+        aux k = [k | _ <- [1..k]] ++ aux (k + 1)
+
+
+lista3 :: Integral t => Int -> [t]
+lista3 n = take n $ aux 1
+    where
+        aux k = [2 * k | _ <- [1..k]] ++ aux (k + 1)
+
+lista4 n = [n,n-1..1] ++ [1..n]
+
+lista5 n = take n aux
+    where
+        aux = [True, False] ++ aux
+
+lista6 :: Integral t => t -> [Int]
+lista6 n = [aux x | x <- [0..n]]
     where
         aux x
             | mod x 3 == 0 = 0
             | mod x 3 == 1 = 1
             | mod x 3 == 2 = -1
 
-lista5_ :: Integral t => Int -> [t]
-lista5_ n = take n [aux x | x <- [0..]]
+lista6_ :: Integral t => Int -> [t]
+lista6_ n = take n [aux x | x <- [0..]]
     where
         aux x
             | mod x 3 == 0 = 0
@@ -61,3 +94,40 @@ nthList ls n = auxNthList ls n 1
             | null ls = []
             | k == n = head ls : auxNthList (tail ls) n 1
             | otherwise = auxNthList (tail ls) n (k + 1)
+
+
+fibFirstN n = take n $ fibAux 0 1
+    where 
+        fibAux a b = a : fibAux b (a + b)
+
+fibLessN n = takeWhile (<=n) $ fibAux 0 1
+    where 
+        fibAux a b = a : fibAux b (a + b)
+
+
+fibBetween a b = dropWhile (<=a) $ takeWhile (<=b) $ fibAux 0 1
+    where 
+        fibAux a b = a : fibAux b (a + b)
+
+fibBetween_ a b = takeWhile (<=b) $ dropWhile (<=a) $ fibAux 0 1
+    where 
+        fibAux a b = a : fibAux b (a + b)
+
+
+-- [1, 20, 5, 3, 20, 12, 20, 1, 1] -> (20, [1, 4, 6])
+maxPositions ls = (maxi, positions)
+    where
+        maxi = maximum ls
+        positions = map snd $ filter (aux maxi) $ zip ls [0..]
+            where
+                aux num (k, pos) = (num == k)
+
+maxPositions_ ls = (maxi, positions)
+    where
+        (maxi, positions) = aux ls (head ls) [0] 0
+            where
+                aux [] maxi positions ind = (maxi, positions)
+                aux (k : ls) maxi positions ind
+                    | k > maxi = aux ls k [ind] (ind + 1)
+                    | k == maxi = aux ls maxi (positions ++ [ind]) (ind + 1)
+                    | otherwise = aux ls maxi positions (ind + 1)
