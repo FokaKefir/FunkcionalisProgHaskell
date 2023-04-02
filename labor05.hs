@@ -1,4 +1,5 @@
 import Data.Char
+import Data.List
 
 mySplitAt :: Int -> [a] -> ([a], [a]) 
 mySplitAt i ls = (bls, jls)
@@ -67,3 +68,38 @@ talalat k ls = auxTalalat k ls 0
         auxTalalat k (e:ls) ind
             | k == e = ind : auxTalalat k ls (ind + 1)
             | otherwise = auxTalalat k ls (ind + 1)
+
+osszegT :: [(String, Int)] -> Int
+osszegT [] = 0
+osszegT ((name, num) : ls) = num + osszegT ls
+
+-- [("mari",[10, 6, 5.5, 8]), ("feri",[8.5, 9.5]), ("zsuzsa",[4.5, 7.9, 10]),("levi", [8.5, 9.5, 10, 7.5])]
+atlagTu :: [(String, [Double])] -> IO()
+atlagTu ls = mapM_ printData $  map (\(name, lsNum) -> (name, auxAtlag lsNum)) ls
+    where 
+        auxAtlag lsNum = (sum lsNum) / (genericLength lsNum)
+        printData (name, avg) = do
+            putStr (name ++ " ")
+            print avg
+
+
+myLength :: [a] -> Int
+myLength ls = foldl (\ s _ -> s + 1) 0 ls
+
+mySum :: Integral a => [a] -> a
+mySum ls = foldl (+) 0 ls
+
+myElem :: Eq a => a -> [a] -> Bool
+myElem k ls = foldr (\ act cond -> (k == act || cond)) False ls
+
+myReverse :: [a] -> [a]
+myReverse ls = foldl (\ lsnew k -> (k : lsnew)) [] ls
+
+myProduct :: [Int] -> Int
+myProduct ls = foldl (*) 1 ls
+
+myMaximum :: Ord a => [a] -> a
+myMaximum (k:ls) = foldl max k ls
+
+polinom :: [Int] -> Int -> Int
+polinom ls x = foldr (\ a k -> a + x * k) 0 ls
