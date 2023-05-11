@@ -99,6 +99,6 @@ primesBetweenInterval = catch (do
             fgcatch e = do putStrLn $ "Error: " ++ show e 
 
 
-fibWriteFile = do
-    fout <- openFile "fibs.txt" WriteMode
-    mapM_ hPutStr $ fibFirstN 10
+--fibWriteFile = do
+--    fout <- openFile "fibs.txt" WriteMode
+--    mapM_ hPutStr $ fibFirstN 10
