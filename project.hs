@@ -105,9 +105,17 @@ areConnected gr x y = auxAreConnected gr x [y]
 
 {- Osszefuggo-e egy graf? 
 Akkor osszefuggo ha az osszes csomopontbol el lehet jutni az osszes tobbi csomopontba
+Elsosorban vizsgaljuk hogy egy adott csomopontbol el lehet-e jutni az osszes tobbibe
+Ezt az elozoleg implementalt areConnected fuggveny es filter segitsegevel erjuk el
+amely szuri azokat a csomopontokat amelyek elerhetok a kezdocsomopont szamara
+Ha egy csomopontbol el lehet jutni az osszes tobbibe, 
+akkor egy iranyitatlan grafra igaz az hogy az osszes tobbibol is barhova el lehet erni
 -}
 isConnectedGraph :: Eq a => [(a, a)] -> Bool
 isConnectedGraph [] = False
+isConnectedGraph gr = (length nodes) == (length $ filter (\n -> areConnected gr fnode n) nodes)
+    where
+        (fnode : nodes) = nodesOf gr
 
 main = do
     putStrLn "Graph2 nodes: "
@@ -131,8 +139,10 @@ main = do
     putStrLn "Are 2 4 connected in graph4?"
     print $ areConnected graph4 2 4 
 
-    putStrLn "Paths between 2 and 4 in graph3>"
+    putStrLn "Paths between 2 and 4 in graph3:"
     print $ sort $ pathsBetween graph4 2 4
 
+    putStrLn "Is graph4 connected graph?"
+    print $ isConnectedGraph graph4
 
 
