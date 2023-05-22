@@ -113,9 +113,28 @@ akkor egy iranyitatlan grafra igaz az hogy az osszes tobbibol is barhova el lehe
 -}
 isConnectedGraph :: Eq a => [(a, a)] -> Bool
 isConnectedGraph [] = False
+isConnectedGraph gr = length nodes == length conns
+    where
+        nodes = nodesOf gr
+        conns = nub $ connections gr (head nodes) []
+        connections :: Eq a => [(a, a)] -> a -> [a] -> [a]
+        connections gr node lsNodes
+            | node `elem` lsNodes = conns
+            | otherwise = node : conns
+                where 
+                    neighborsOfNode = neighborsOf gr node
+                    possibleNeighborsOfNode = filter (\n -> n `notElem` lsNodes) neighborsOfNode
+                    conns = concat $ map (\n -> connections gr n (node : lsNodes)) possibleNeighborsOfNode
+
+{-
+isConnectedGraph :: Eq a => [(a, a)] -> Bool
+isConnectedGraph [] = False
 isConnectedGraph gr = (length nodes) == (length $ filter (\n -> areConnected gr fnode n) nodes)
     where
         (fnode : nodes) = nodesOf gr
+-}
+
+
 
 main = do
     putStrLn "Graph2 nodes: "
